@@ -3,6 +3,7 @@ import os
 from flask import Flask
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils import create_database, database_exists
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -20,6 +21,9 @@ def create_app():
     migrate.init_app(app, db)
 
     with app.app_context():
+        if not database_exists(db.engine.url):
+            create_database(db.engine.url)
+
         db.create_all()  # Create all tables
 
         # Inserts employee test data if no Employees exist
