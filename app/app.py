@@ -1,9 +1,11 @@
 import os
 
 from flask import Flask
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app():
@@ -15,6 +17,7 @@ def create_app():
     from app import models  # Import models here to avoid circular imports
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     with app.app_context():
         db.create_all()  # Create all tables

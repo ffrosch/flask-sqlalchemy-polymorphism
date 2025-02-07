@@ -7,6 +7,9 @@ venv/
 env/
 .env
 
+# PyEnv
+.python-version
+
 # Docker
 *.dockerignore
 docker-compose.override.yml
@@ -25,8 +28,3 @@ instance/
 .vscode/
 *.swp
 *.swo
-
-# DBeaver files
-.metadata
-General/
-dbeaver-workspace.properties
