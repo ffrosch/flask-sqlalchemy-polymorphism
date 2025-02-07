@@ -36,6 +36,12 @@ def create_app():
 
     @app.route("/")
     def index():
-        return "Hello, Flask with PostGIS!"
+        heading = "<h1>Polymorphism with Flask-SQLAlchemy</h1>"
+        users = models.User.query.all()
+        if users:
+            return heading + "<table><tr><th>ID</th><th>Type</th><th>Account ID</th><th>Email</th></tr>" + "".join(
+                f"<tr><td>{user.id}</td><td>{user.type}</td><td>{user.account_id if hasattr(user, 'account_id') else ''}</td><td>{user.email if hasattr(user, 'email') else ''}</td></tr>"
+                for user in users) + "</table>"
+        return heading + "No users available"
 
     return app

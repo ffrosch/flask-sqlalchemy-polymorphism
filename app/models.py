@@ -2,29 +2,29 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.app import db
 
 
-class Employee(db.Model):
-    __tablename__ = "employee"
+class User(db.Model):
+    __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
     type: Mapped[str]
 
     __mapper_args__ = {
         "polymorphic_on": "type",
-        "polymorphic_identity": "employee",
+        # Uncomment this to allow the use of the "User" model, too!
+        # "polymorphic_identity": "user",
     }
 
 
-class Manager(Employee):
-    manager_data: Mapped[str] = mapped_column(nullable=True)
+class RegisteredUser(User):
+    account_id: Mapped[int] = mapped_column(nullable=True)
 
     __mapper_args__ = {
-        "polymorphic_identity": "manager",
+        "polymorphic_identity": "account",
     }
 
 
-class Engineer(Employee):
-    engineer_info: Mapped[str] = mapped_column(nullable=True)
+class UnregisteredUser(User):
+    email: Mapped[str] = mapped_column(nullable=True)
 
     __mapper_args__ = {
-        "polymorphic_identity": "engineer",
+        "polymorphic_identity": "no_account",
     }
