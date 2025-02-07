@@ -1,0 +1,32 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+.env
+
+# Docker
+*.dockerignore
+docker-compose.override.yml
+
+# Pytest
+.cache
+*.cover
+*.log
+
+# Flask specific
+instance/
+.webassets-cache
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# DBeaver files
+.metadata
+General/
+dbeaver-workspace.properties
