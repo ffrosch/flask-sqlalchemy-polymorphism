@@ -24,13 +24,6 @@ def create_app():
         if not database_exists(db.engine.url):
             create_database(db.engine.url)
 
-        db.create_all()  # Create all tables
-
-        # Inserts employee test data if no Employees exist
-        from app.test_data import insert_employees
-
-        insert_employees(db)
-
     # define the shell context
     @app.shell_context_processor
     def shell_context():  # pragma: no cover
