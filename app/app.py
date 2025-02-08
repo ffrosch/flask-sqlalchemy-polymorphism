@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import create_database, database_exists
@@ -26,22 +26,34 @@ def create_app():
 
     # define the shell context
     @app.shell_context_processor
-    def shell_context():  # pragma: no cover
-        ctx = {"db": db}
+    def shell_context():
+        from app.test_data import insert_users
+
+        ctx = {"db": db, "insert_users": insert_users}
         for attr in dir(models):
             model = getattr(models, attr)
             if hasattr(model, "__bases__") and db.Model in getattr(model, "__bases__"):
                 ctx[attr] = model
+
         return ctx
 
     @app.route("/")
     def index():
-        heading = "<h1>Polymorphism with Flask-SQLAlchemy</h1>"
+        users_table_query = db.session.execute(
+            db.select(models.User.__table__)
+        ).fetchall()
         users = models.User.query.all()
-        if users:
-            return heading + "<table><tr><th>ID</th><th>Type</th><th>Account ID</th><th>Email</th></tr>" + "".join(
-                f"<tr><td>{user.id}</td><td>{user.type}</td><td>{user.account_id if hasattr(user, 'account_id') else ''}</td><td>{user.email if hasattr(user, 'email') else ''}</td></tr>"
-                for user in users) + "</table>"
-        return heading + "No users available"
+        registered_users = models.RegisteredUser.query.all()
+        unregistered_users = models.UnregisteredUser.query.all()
+        accounts = models.Account.query.all()
+
+        return render_template(
+            "index.html",
+            users=users,
+            registered_users=registered_users,
+            unregistered_users=unregistered_users,
+            accounts=accounts,
+            users_table_query=users_table_query,
+        )
 
     return app

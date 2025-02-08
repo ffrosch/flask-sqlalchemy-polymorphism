@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Polymorphism with Flask-SQLAlchemy</title>
+  </head>
+
+  <body>
+    <h1>Polymorphism with Flask-SQLAlchemy</h1>
+
+    <h2>Raw Users Table</h2>
+    <div>Query of the raw users table without its polymorphic Mapper</div>
+    {% if users_table_query %}
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Account ID</th>
+        <th>Email</th>
+      </tr>
+      {% for row in users_table_query %}
+      <tr>
+        <td>{{ row[0] if row[0] else 'EMPTY' }}</td>
+        <td>{{ row[1] if row[1] else 'EMPTY' }}</td>
+        <td>{{ row[2] if row[2] else 'EMPTY' }}</td>
+        <td>{{ row[3] if row[3] else 'EMPTY' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>No users available</p>
+    {% endif %}
+
+    <h2>Users</h2>
+    <div>Query of the users table with the Parent Interface (User) of the polymorphic Mapper</div>
+    {% if users %}
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Account ID</th>
+        <th>Email</th>
+      </tr>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.type }}</td>
+        <td>{{ user.account_id if 'account_id' in user.__dict__ else 'EMPTY' }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>No users available</p>
+    {% endif %}
+
+    <h2>Registered Users</h2>
+    <div>Query of the users table with Child (RegisteredUser) of the polymorphic Mapper</div>
+    {% if registered_users %}
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Account ID</th>
+        <th>Email</th>
+      </tr>
+      {% for user in registered_users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.type }}</td>
+        <td>{{ user.account_id }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>No users available</p>
+    {% endif %}
+
+    <h2>UnRegistered Users</h2>
+    <div>Query of the users table with Child (UnRegisteredUser) of the polymorphic Mapper</div>
+    {% if unregistered_users %}
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Account ID</th>
+        <th>Email</th>
+      </tr>
+      {% for user in unregistered_users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.type }}</td>
+        <td>{{ user.account_id if 'account_id' in user.__dict__ else 'EMPTY' }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>No users available</p>
+    {% endif %}
+
+    <h2>User Accounts</h2>
+    <div>Query of the accounts table which is linked to the RegisteredUser</div>
+    {% if accounts %}
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+      </tr>
+      {% for account in accounts %}
+      <tr>
+        <td>{{ account.id }}</td>
+        <td>{{ account.email }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>No accounts available</p>
+    {% endif %}
+
+  </body>
+
+</html>

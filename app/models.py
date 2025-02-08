@@ -1,5 +1,14 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from __future__ import annotations
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.app import db
+
+
+class Account(db.Model):
+    __tablename__ = "account"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(nullable=False)
+
+    registered_user: Mapped[RegisteredUser] = relationship(back_populates="account")
 
 
 class User(db.Model):
@@ -15,7 +24,17 @@ class User(db.Model):
 
 
 class RegisteredUser(User):
-    account_id: Mapped[int] = mapped_column(nullable=True)
+    account_id: Mapped[int] = mapped_column(db.ForeignKey(Account.id), nullable=True)
+
+    account: Mapped[Account] = relationship(
+        back_populates="registered_user",
+        single_parent=True,
+        cascade="all, delete-orphan",
+    )
+
+    @property
+    def email(self):
+        return self.account.email
 
     __mapper_args__ = {
         "polymorphic_identity": "account",
